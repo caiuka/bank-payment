@@ -247,6 +247,13 @@ class BankingExportSddWizard(models.TransientModel):
                 end2end_identification_2_31.text = self._prepare_field(
                     'End to End Identification', 'line.name',
                     {'line': line}, 35, gen_args=gen_args)
+################
+                progressivo_disposizione = etree.SubElement(
+                    dd_transaction_info_2_28, 'InstrId')
+                progressivo_disposizione.text = self._prepare_field(
+                    'End to End Identification', 'line.name',
+                    {'line': line}, 35, gen_args=gen_args)
+################
                 currency_name = self._prepare_field(
                     'Currency Code', 'line.currency.name',
                     {'line': line}, 3, gen_args=gen_args)

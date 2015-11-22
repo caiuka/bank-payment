@@ -100,21 +100,23 @@ class BankingExportPain(models.AbstractModel):
             tools.file_open(gen_args['pain_xsd_file']))
         official_pain_schema = etree.XMLSchema(xsd_etree_obj)
 
-        try:
-            root_to_validate = etree.fromstring(xml_string)
-            official_pain_schema.assertValid(root_to_validate)
-        except Exception, e:
-            logger.warning(
-                "The XML file is invalid against the XML Schema Definition")
-            logger.warning(xml_string)
-            logger.warning(e)
-            raise Warning(
-                _("The generated XML file is not valid against the official "
-                    "XML Schema Definition. The generated XML file and the "
-                    "full error have been written in the server logs. Here "
-                    "is the error, which may give you an idea on the cause "
-                    "of the problem : %s")
-                % unicode(e))
+########
+#        try:
+#            root_to_validate = etree.fromstring(xml_string)
+#            official_pain_schema.assertValid(root_to_validate)
+#        except Exception, e:
+#            logger.warning(
+#                "The XML file is invalid against the XML Schema Definition")
+#            logger.warning(xml_string)
+#            logger.warning(e)
+#            raise Warning(
+#                _("The generated XML file is not valid against the official "
+#                    "XML Schema Definition. The generated XML file and the "
+#                    "full error have been written in the server logs. Here "
+#                    "is the error, which may give you an idea on the cause "
+#                    "of the problem : %s")
+#                % unicode(e))
+########
         return True
 
     @api.multi
@@ -313,6 +315,13 @@ class BankingExportPain(models.AbstractModel):
             # for Credit Transfers, in the 'C' block, if BIC is not provided,
             # we should not put the 'Creditor Agent' block at all,
             # as per the guidelines of the EPC
+########
+        party_agent_member_identification = etree.SubElement(
+            party_agent_institution, 'ClrSysMmbId')
+        party_agent_abi = etree.SubElement(
+            party_agent_member_identification, 'MmbId')
+        party_agent_abi.text = "03268"
+########
         return True
 
     @api.model

@@ -249,7 +249,7 @@ class BankingExportSddWizard(models.TransientModel):
                     {'line': line}, 35, gen_args=gen_args)
 ################
                 progressivo_disposizione = etree.SubElement(
-                    dd_transaction_info_2_28, 'InstrId')
+                    payment_identification_2_29, 'InstrId')
                 progressivo_disposizione.text = self._prepare_field(
                     'End to End Identification', 'line.name',
                     {'line': line}, 35, gen_args=gen_args)
@@ -354,8 +354,8 @@ class BankingExportSddWizard(models.TransientModel):
                 self.generate_remittance_info_block(
                     dd_transaction_info_2_28, line, gen_args)
 
-            nb_of_transactions_2_4.text = unicode(transactions_count_2_4)
-            control_sum_2_5.text = '%.2f' % amount_control_sum_2_5
+#            nb_of_transactions_2_4.text = unicode(transactions_count_2_4)
+#            control_sum_2_5.text = '%.2f' % amount_control_sum_2_5
         nb_of_transactions_1_6.text = unicode(transactions_count_1_6)
         control_sum_1_7.text = '%.2f' % amount_control_sum_1_7
 

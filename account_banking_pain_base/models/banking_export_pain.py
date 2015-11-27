@@ -307,11 +307,11 @@ class BankingExportPain(models.AbstractModel):
                     parent_node, '%sAgt' % party_type)
                 party_agent_institution = etree.SubElement(
                     party_agent, 'FinInstnId')
-                party_agent_other = etree.SubElement(
-                    party_agent_institution, 'Othr')
-                party_agent_other_identification = etree.SubElement(
-                    party_agent_other, 'Id')
-                party_agent_other_identification.text = 'NOTPROVIDED'
+#                party_agent_other = etree.SubElement(
+#                    party_agent_institution, 'Othr')
+#                party_agent_other_identification = etree.SubElement(
+#                    party_agent_other, 'Id')
+#                party_agent_other_identification.text = 'NOTPROVIDED'
             # for Credit Transfers, in the 'C' block, if BIC is not provided,
             # we should not put the 'Creditor Agent' block at all,
             # as per the guidelines of the EPC

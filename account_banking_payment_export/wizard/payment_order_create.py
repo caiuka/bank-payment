@@ -102,7 +102,6 @@ class PaymentOrderCreate(models.TransientModel):
         domain = [('move_id.state', '=', 'posted'),
                   ('reconcile_id', '=', False),
                   ('company_id', '=', payment.mode.company_id.id),
-                  ('payment_type', '=', 'RID'),
                   '|',
                   ('date_maturity', '<=', self.duedate),
                   ('date_maturity', '=', False)]

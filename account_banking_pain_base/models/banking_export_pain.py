@@ -323,7 +323,10 @@ class BankingExportPain(models.AbstractModel):
             party_agent_institution, 'ClrSysMmbId')
         party_agent_abi = etree.SubElement(
             party_agent_member_identification, 'MmbId')
-        party_agent_abi.text = "03268"
+        if party_type == 'Cdtr':
+            party_agent_abi.text = "03268"
+        elif party_type == 'Dbtr':
+            party_agent_abi.text = "03067"
 ########
         return True
 

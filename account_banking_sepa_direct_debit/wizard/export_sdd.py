@@ -128,15 +128,22 @@ class BankingExportSddWizard(models.TransientModel):
             'pain_xsd_file':
             'account_banking_sepa_direct_debit/data/%s.xsd' % pain_flavor,
         }
+#        pain_ns = {
+#            'xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+#            None: 'urn:iso:std:iso:20022:tech:xsd:%s' % pain_flavor,
+#        }
         pain_ns = {
             'xsi': 'http://www.w3.org/2001/XMLSchema-instance',
-            None: 'urn:iso:std:iso:20022:tech:xsd:%s' % pain_flavor,
+            None: 'urn:CBI:xsd:CBISDDReqLogMsg.00.01.00',
         }
-        xml_root = etree.Element('Document', nsmap=pain_ns)
-        pain_root = etree.SubElement(xml_root, root_xml_tag)
+#        xml_root = etree.Element('Document', nsmap=pain_ns)
+        xml_root = etree.Element('CBISDDReqLogMsg', nsmap=pain_ns)
+#        pain_root = etree.SubElement(xml_root, root_xml_tag)
         # A. Group header
+#        group_header_1_0, nb_of_transactions_1_6, control_sum_1_7 = \
+#            self.generate_group_header_block(pain_root, gen_args)
         group_header_1_0, nb_of_transactions_1_6, control_sum_1_7 = \
-            self.generate_group_header_block(pain_root, gen_args)
+            self.generate_group_header_block(xml_root, gen_args)
         transactions_count_1_6 = 0
         total_amount = 0.0
         amount_control_sum_1_7 = 0.0
@@ -203,9 +210,21 @@ class BankingExportSddWizard(models.TransientModel):
         for (requested_date, priority, sequence_type, scheme), lines in \
                 lines_per_group.items():
             # B. Payment info
+#            payment_info_2_0, nb_of_transactions_2_4, control_sum_2_5 = \
+#                self.generate_start_payment_info_block(
+#                    pain_root,
+#                    "self.payment_order_ids[0].reference + '-' + "
+#                    "sequence_type + '-' + requested_date.replace('-', '')  "
+#                    "+ '-' + priority",
+#                    priority, scheme, sequence_type, requested_date, {
+#                        'self': self,
+#                        'sequence_type': sequence_type,
+#                        'priority': priority,
+#                        'requested_date': requested_date,
+#                    }, gen_args)
             payment_info_2_0, nb_of_transactions_2_4, control_sum_2_5 = \
                 self.generate_start_payment_info_block(
-                    pain_root,
+                    xml_root,
                     "self.payment_order_ids[0].reference + '-' + "
                     "sequence_type + '-' + requested_date.replace('-', '')  "
                     "+ '-' + priority",

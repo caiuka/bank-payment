@@ -122,8 +122,11 @@ class BankingExportPain(models.AbstractModel):
     @api.multi
     def finalize_sepa_file_creation(
             self, xml_root, total_amount, transactions_count, gen_args):
+#        xml_string = etree.tostring(
+#            xml_root, pretty_print=True, encoding='UTF-8',
+#            xml_declaration=True)
         xml_string = etree.tostring(
-            xml_root, pretty_print=True, encoding='UTF-8',
+            xml_root, pretty_print=True, encoding='ISO-8859-1',
             xml_declaration=True)
         logger.debug(
             "Generated SEPA XML file in format %s below"

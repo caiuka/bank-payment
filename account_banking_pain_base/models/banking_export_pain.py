@@ -287,14 +287,15 @@ class BankingExportPain(models.AbstractModel):
         This code is mutualized between TRF and DD"""
         assert order in ('B', 'C'), "Order can be 'B' or 'C'"
         try:
-            bic = self._prepare_field(
-                '%s BIC' % party_type_label, bic, eval_ctx, gen_args=gen_args)
-            party_agent = etree.SubElement(parent_node, '%sAgt' % party_type)
-            party_agent_institution = etree.SubElement(
-                party_agent, 'FinInstnId')
-            party_agent_bic = etree.SubElement(
-                party_agent_institution, gen_args.get('bic_xml_tag'))
-            party_agent_bic.text = bic
+            if party_agent != 'Dbtr':
+                bic = self._prepare_field(
+                    '%s BIC' % party_type_label, bic, eval_ctx, gen_args=gen_args)
+                party_agent = etree.SubElement(parent_node, '%sAgt' % party_type)
+                party_agent_institution = etree.SubElement(
+                    party_agent, 'FinInstnId')
+                party_agent_bic = etree.SubElement(
+                    party_agent_institution, gen_args.get('bic_xml_tag'))
+                party_agent_bic.text = bic
         except Warning:
             if order == 'C':
                 if iban[0:2] != gen_args['initiating_party_country_code']:
@@ -304,30 +305,28 @@ class BankingExportPain(models.AbstractModel):
                             "must have an associated BIC because it is a "
                             "cross-border SEPA operation.")
                         % (iban, party_name))
-            if order == 'B' or (
-                    order == 'C' and gen_args['payment_method'] == 'DD'):
-                party_agent = etree.SubElement(
-                    parent_node, '%sAgt' % party_type)
-                party_agent_institution = etree.SubElement(
-                    party_agent, 'FinInstnId')
-#                party_agent_other = etree.SubElement(
-#                    party_agent_institution, 'Othr')
-#                party_agent_other_identification = etree.SubElement(
-#                    party_agent_other, 'Id')
-#                party_agent_other_identification.text = 'NOTPROVIDED'
-            # for Credit Transfers, in the 'C' block, if BIC is not provided,
-            # we should not put the 'Creditor Agent' block at all,
-            # as per the guidelines of the EPC
+            if party_agent != 'Dbtr':
+                if order == 'B' or (
+                        order == 'C' and gen_args['payment_method'] == 'DD'):
+                    party_agent = etree.SubElement(
+                        parent_node, '%sAgt' % party_type)
+                    party_agent_institution = etree.SubElement(
+                        party_agent, 'FinInstnId')
+    #                party_agent_other = etree.SubElement(
+    #                    party_agent_institution, 'Othr')
+    #                party_agent_other_identification = etree.SubElement(
+    #                    party_agent_other, 'Id')
+    #                party_agent_other_identification.text = 'NOTPROVIDED'
+                # for Credit Transfers, in the 'C' block, if BIC is not provided,
+                # we should not put the 'Creditor Agent' block at all,
+                # as per the guidelines of the EPC
 ########
-        party_agent_member_identification = etree.SubElement(
-            party_agent_institution, 'ClrSysMmbId')
-        party_agent_abi = etree.SubElement(
-            party_agent_member_identification, 'MmbId')
-        party_agent_abi.text = iban[5:10]
-#        if party_type == 'Cdtr':
-#            party_agent_abi.text = "03268"
-#        elif party_type == 'Dbtr':
-#            party_agent_abi.text = "03067"
+        if party_agent != 'Dbtr':
+            party_agent_member_identification = etree.SubElement(
+                party_agent_institution, 'ClrSysMmbId')
+            party_agent_abi = etree.SubElement(
+                party_agent_member_identification, 'MmbId')
+            party_agent_abi.text = iban[5:10]
 ########
         return True
 

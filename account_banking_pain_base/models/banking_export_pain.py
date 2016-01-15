@@ -287,7 +287,7 @@ class BankingExportPain(models.AbstractModel):
         This code is mutualized between TRF and DD"""
         assert order in ('B', 'C'), "Order can be 'B' or 'C'"
         try:
-            if party_agent != 'Dbtr':
+            if party_type != 'Dbtr':
                 bic = self._prepare_field(
                     '%s BIC' % party_type_label, bic, eval_ctx, gen_args=gen_args)
                 party_agent = etree.SubElement(parent_node, '%sAgt' % party_type)
@@ -305,7 +305,7 @@ class BankingExportPain(models.AbstractModel):
                             "must have an associated BIC because it is a "
                             "cross-border SEPA operation.")
                         % (iban, party_name))
-            if party_agent != 'Dbtr':
+            if party_type != 'Dbtr':
                 if order == 'B' or (
                         order == 'C' and gen_args['payment_method'] == 'DD'):
                     party_agent = etree.SubElement(
@@ -321,7 +321,7 @@ class BankingExportPain(models.AbstractModel):
                 # we should not put the 'Creditor Agent' block at all,
                 # as per the guidelines of the EPC
 ########
-        if party_agent != 'Dbtr':
+        if party_type != 'Dbtr':
             party_agent_member_identification = etree.SubElement(
                 party_agent_institution, 'ClrSysMmbId')
             party_agent_abi = etree.SubElement(

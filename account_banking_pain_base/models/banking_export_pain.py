@@ -372,6 +372,13 @@ class BankingExportPain(models.AbstractModel):
 
     @api.model
     def generate_remittance_info_block(self, parent_node, line, gen_args):
+########
+        remittance_info_2_90 = etree.SubElement(
+            parent_node, 'Purp')
+        remittance_info_2_901 = etree.SubElement(
+            remittance_info_2_90, 'Cd')
+        remittance_info_2_901.text = 'OTLC'
+########
         remittance_info_2_91 = etree.SubElement(
             parent_node, 'RmtInf')
         if line.state == 'normal':
@@ -388,8 +395,13 @@ class BankingExportPain(models.AbstractModel):
                     _("Missing 'Structured Communication Type' on payment "
                         "line with reference '%s'.")
                     % line.name)
+            remittance_info_unstructured_2_99 = etree.SubElement(
+                remittance_info_2_91, 'Ustrd')
+            remittance_info_unstructured_2_99.text = 'Saldo Fattura %s' % line.communication
             remittance_info_structured_2_100 = etree.SubElement(
-                remittance_info_2_91, 'Strd')
+                    remittance_info_2_91, 'Strd')
+#            remittance_info_structured_2_100 = etree.SubElement(
+#                remittance_info_unstructured_2_99, 'Strd')
             creditor_ref_information_2_120 = etree.SubElement(
                 remittance_info_structured_2_100, 'CdtrRefInf')
             if gen_args.get('pain_flavor') == 'pain.001.001.02':

@@ -375,6 +375,10 @@ class BankingExportSddWizard(models.TransientModel):
                     'line.bank_id.bank_bic',
                     {'line': line}, gen_args)
 
+#                    remittance_info_2_91 = etree.SubElement(
+#                        dd_transaction_info_2_28, 'Purp')
+#                    remittance_info_2_91.text = 'OTLC'
+
                 self.generate_remittance_info_block(
                     dd_transaction_info_2_28, line, gen_args)
 

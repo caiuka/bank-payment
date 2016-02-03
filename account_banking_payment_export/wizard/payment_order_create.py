@@ -99,7 +99,8 @@ class PaymentOrderCreate(models.TransientModel):
         payment = self.env['payment.order'].browse(
             self.env.context['active_id'])
         # Search for move line to pay:
-        domain = [('move_id.state', '=', 'posted'),
+        domain = [('move_id.payment_type', '=', '2'),
+                  ('move_id.state', '=', 'posted'),
                   ('reconcile_id', '=', False),
                   ('company_id', '=', payment.mode.company_id.id),
                   '|',
